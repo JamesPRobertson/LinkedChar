@@ -32,6 +32,22 @@ class LinkedChar{
 private:
 	CharNode *head;
 
+	CharNode * getNodeAt(int index){
+		CharNode * traversalNode = head;
+		int count = 0;
+
+		while(traversalNode != nullptr){
+			if(count == index){
+				return traversalNode;
+			}
+
+			count++;
+			traversalNode = traversalNode->getNextNode();
+		}
+
+		return nullptr;
+	}
+
 public:
 	LinkedChar(){
 
@@ -48,7 +64,7 @@ public:
 		}
 	}
 
-	int length(){
+	int length() const{
 		int count = 0;
 		CharNode *traversalNode = head;
 
@@ -65,11 +81,11 @@ public:
 		CharNode *traversalNode = head;
 
 		while(traversalNode != nullptr){
-			charIndex++;
-
 			if(traversalNode->getData() == ch){
 				return charIndex;
 			}
+
+			charIndex++;
 
 			traversalNode = traversalNode->getNextNode();
 		}
@@ -77,6 +93,7 @@ public:
 		return -1;
 	}
 
+	//Delete before submission
 	void print(){
 		CharNode * traversalNode = head;
 		std::cout << "The contents are:";
@@ -91,11 +108,60 @@ public:
 	}
 
 	void append(const LinkedChar& lc){
+		/*
+		CharNode * traversalNode = this->getNodeAt(this->length());
+		traversalNode->setNextNode(lc.head);
+		//Please call ~LinkedChar at the end of this method
+		 */
 
+		CharNode * traversalNode = this->getNodeAt(this->length() - 1);
+		CharNode * lcTraversalNode = lc.head;
+
+		while(lcTraversalNode != nullptr){
+			CharNode * tempNode = new CharNode(lcTraversalNode->getData());
+
+			traversalNode->setNextNode(tempNode);
+			traversalNode = tempNode;
+
+			lcTraversalNode = lcTraversalNode->getNextNode();
+		}
 	}
 
 	bool submatch(const LinkedChar& lc){
+		CharNode * traversalNode = head;
+		CharNode const * lcTraversalNode = lc.head;
+		int lcLength = lc.length();
+		int count = 0;
 
+		while(traversalNode != nullptr){
+			//if they match
+			if(traversalNode->getData() == lcTraversalNode->getData()){
+				count++;
+				//if we get all the correct letters in sequence we are finished
+				if(count == lcLength){
+					return true;
+				}
+
+				traversalNode = traversalNode->getNextNode();
+				lcTraversalNode = lcTraversalNode->getNextNode();
+			}
+
+			//We didn't find a match
+			else{
+				count = 0;
+
+				lcTraversalNode = lc.head;
+				//However we gotta see if the current letter matches the first one like this: udder : der
+				if(traversalNode->getData() == lcTraversalNode->getData()){
+					count++;
+					lcTraversalNode = lcTraversalNode->getNextNode();
+				}
+
+				traversalNode = traversalNode->getNextNode();
+			}
+		}
+
+		return false;
 	}
 
 };
@@ -104,6 +170,7 @@ int main(){
 	std::cout << "Please input a string of characters." << std::endl;
 
 	std::string inputString;
+	std::string inputAppendString;
 
 	std::getline(std::cin,inputString);
 
@@ -113,4 +180,16 @@ int main(){
 
 	std::cout << "The length of the string is : " << list->length() << std::endl;
 	std:: cout << "The position of 'a' is: " << list->index('a') << std::endl;
+
+	std::cout << "Please input another string to append: " << std::endl;
+	std::getline(std::cin, inputString);
+	LinkedChar * listAppend = new LinkedChar(inputString);
+	list->append(*listAppend);
+	std::cout << "After appending, the new list is: ";
+	list->print();
+	std::cout << "Please enter a substring to search for: " << std::endl;
+	std::getline(std::cin,inputString);
+	LinkedChar * listSubMatch = new LinkedChar(inputString);
+	std::cout << "Does the string contain a match?: " << list->submatch(*listSubMatch) << std::endl;
+
 }
