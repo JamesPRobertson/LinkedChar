@@ -49,9 +49,7 @@ private:
 	}
 
 public:
-	LinkedChar(){
-
-	}
+	LinkedChar(){}
 
 	LinkedChar(std::string s){
 		head = new CharNode(s[0]);
@@ -93,8 +91,7 @@ public:
 		return -1;
 	}
 
-	//Delete before submission
-	void print(){
+	void toString(){
 		CharNode * traversalNode = head;
 		std::cout << "The contents are:";
 
@@ -173,11 +170,11 @@ int main(){
 
 	while(true){
 		int selection = selectionMenu();
-		std::string input = nullptr;
+		std::string input;
 
 		switch(selection){
 			default:
-				continue;
+				break;
 
 			case 0:
 				std::cout << "Successfully exited program" << std::endl;
@@ -215,7 +212,7 @@ int main(){
 
 			case 6:
 				std::cout << std::endl;
-				linkedChar->print();
+				linkedChar->toString();
 				break;
 		}
 	}
