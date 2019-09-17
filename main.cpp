@@ -166,30 +166,72 @@ public:
 
 };
 
+int selectionMenu();
+
 int main(){
-	std::cout << "Please input a string of characters." << std::endl;
+	LinkedChar * linkedChar = nullptr;
+
+	while(true){
+		int selection = selectionMenu();
+		std::string input = nullptr;
+
+		switch(selection){
+			default:
+				continue;
+
+			case 0:
+				std::cout << "Successfully exited program" << std::endl;
+				return 1;
+
+			case 1:
+				//To prevent an endless number of LinkedChars from building up, we delete the current one and rewrite it
+				delete(linkedChar);
+				std::cout << "Please enter a string to rewrite or initialize the LinkedChar" << std::endl;
+				std::getline(std::cin,input);
+				linkedChar = new LinkedChar(input);
+				break;
+
+			case 2:
+				std::cout << "The current length of the LinkedChar is: " << linkedChar->length() << std::endl;
+				break;
+
+			case 3:
+				std::cout << "What character would you like to find?" << std:: endl;
+				std::getline(std::cin, input);
+				std::cout << "The index of " << input << " is: " << linkedChar->index(input[0]) << std::endl;
+				break;
+
+			case 4:
+				std::cout << "Please enter a string to append to the end of the linkedChar" << std::endl;
+				std::getline(std::cin, input);
+				linkedChar->append(input);
+				break;
+
+			case 5:
+				std::cout << "Please enter a string to test for submatch" << std::endl;
+				std::getline(std::cin,input);
+				std::cout << "Does the linkedChar contain: " << input << "? " << linkedChar->submatch(input);
+				break;
+
+			case 6:
+				std::cout << std::endl;
+				linkedChar->print();
+				break;
+		}
+	}
+}
+
+int selectionMenu(){
+	std::cout << "Please make a selection by entering the corresponding integer" << std::endl;
+	std::cout << "	(0) To exit the program immediately" << std::endl;
+	std::cout << "	(1) Enter or rewrite the working linkedChar string" << std::endl;
+	std::cout << "	(2) Get current length of working LinkedChar" << std::endl;
+	std::cout << "	(3) Find the index of a character in the working LinkedChar" << std::endl;
+	std::cout << "	(4) Append a string onto the end of the working LinkedChar" << std::endl;
+	std::cout << "	(5) Determine if a string is contained within the working LinkedChar" << std::endl;
+	std::cout << "	(6) Display the current working LinkedChar" << std::endl;
 
 	std::string inputString;
-	std::string inputAppendString;
-
 	std::getline(std::cin,inputString);
-
-	LinkedChar * list = new LinkedChar(inputString);
-
-	list->print();
-
-	std::cout << "The length of the string is : " << list->length() << std::endl;
-	std:: cout << "The position of 'a' is: " << list->index('a') << std::endl;
-
-	std::cout << "Please input another string to append: " << std::endl;
-	std::getline(std::cin, inputString);
-	LinkedChar * listAppend = new LinkedChar(inputString);
-	list->append(*listAppend);
-	std::cout << "After appending, the new list is: ";
-	list->print();
-	std::cout << "Please enter a substring to search for: " << std::endl;
-	std::getline(std::cin,inputString);
-	LinkedChar * listSubMatch = new LinkedChar(inputString);
-	std::cout << "Does the string contain a match?: " << list->submatch(*listSubMatch) << std::endl;
-
+	return std::stoi(inputString);
 }
